@@ -5,6 +5,8 @@ int gibIntWert(char name[], int min, int max);
 bool istSchaltjahr(int jahr);
 int tageProMonat(int jahr, int monat);
 
+enum month_t { JAN = 1, FEB, MAR, APR, MAI, JUN, JUL, AUG, SEP, OKT, NOV, DEZ };
+
 int main(int argc, char *argv[]) {
 
   int monat, jahr;
@@ -27,6 +29,32 @@ int main(int argc, char *argv[]) {
   return 0;
 }
 
-int gibIntWert(char name[], int min, int max) { return 0; }
-bool istSchatljahr(int jahr) { return false; }
-int tageProMonat(int jahr, int monat) { return 0; }
+int gibIntWert(char name[], int min, int max) {
+  int input;
+  scanf("%d", &input);
+  if (input <= max && input >= min) {
+    return input;
+  }
+  return 0;
+}
+
+bool istSchaltjahr(int jahr) { return jahr % 4 == 0; }
+
+int tageProMonat(int jahr, int monat) {
+  switch (monat) {
+  case FEB:
+    if (istSchaltjahr(jahr)) {
+      return 29;
+    } else {
+      return 28;
+    }
+  case JAN:
+  case MAR:
+  case MAI:
+  case JUL:
+  case SEP:
+  case NOV:
+    return 30;
+  }
+  return 31;
+}
