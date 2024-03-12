@@ -1,0 +1,3 @@
+[submodule "04/snp_students"]
+	path = 04/snp_students
+	url = https://github.zhaw.ch/SNP/snp_students.git
