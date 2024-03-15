@@ -12,6 +12,8 @@
  * @brief Lab implementation
  */
 // begin students to add code for task 4.1
-#include <stdbool.h>
-bool rectangular(int a, int b, int c);
+#ifndef RETANG_H
+#define RETANG_H
+int isRightAngled(int a, int b, int c);
+#endif
 // end students to add code

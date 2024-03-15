@@ -7,32 +7,29 @@
  * -- |_____|_| |_|______|_____/   8401 Winterthur, Switzerland               -
  * ----------------------------------------------------------------------------
  */
-
-#include <stdbool.h>
-
 /**
  * @file
  * @brief Lab implementation
  */
 // begin students to add code for task 4.1
-bool rectangular(int a, int b, int c) {
 
-  int aS = a * a;
-  int bS = b * b;
-  int cS = c * c;
+#include "rectang.h"
 
-  bool isRightAngled;
-  if ((a == 0) && (b == 0) && (c == 0))
-    isRightAngled = false;
-  else if ((aS + bS) == cS)
-    isRightAngled = true;
-  else if ((aS + cS) == bS)
-    isRightAngled = true;
-  else if ((bS + cS) == aS)
-    isRightAngled = true;
-  else
-    isRightAngled = false;
+int isRightAngled(int a, int b, int c){
 
-  return isRightAngled;
+        int aS = a*a;
+        int bS = b*b;
+        int cS = c*c;
+        if ((a == 0) && (b == 0) && (c == 0))
+            return 0;
+        else if ((aS + bS) == cS)
+            return 1;
+        else if ((aS + cS) == bS)
+            return 1;
+        else if ((bS + cS) == aS)
+            return 1;
+        else
+            return 0;
+
 }
 // end students to add code
