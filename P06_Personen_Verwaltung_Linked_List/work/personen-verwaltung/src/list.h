@@ -1,6 +1,3 @@
-//
-// Created by manue on 02.04.2024.
-//
 
 #ifndef SNP_LIST_H
 #define SNP_LIST_H
