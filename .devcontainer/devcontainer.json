@@ -16,7 +16,18 @@
 	// Configure tool-specific properties.
 	// "customizations": {},
 	"workspaceMount": "src=${localWorkspaceFolder},dst=/home/vscode/snp,type=bind,consistency=cached",
-	"workspaceFolder": "/home/vscode/snp"
+	"workspaceFolder": "/home/vscode/snp",
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"TheBromo.bromium-icons",
+				"ms-vscode.cpptools",
+				"ms-vscode.cpptools-extension-pack",
+				"GitHub.github-vscode-theme",
+				"asvetliakov.vscode-neovim"
+			]
+		}
+	}
 	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
 	// "remoteUser": "root"
 }

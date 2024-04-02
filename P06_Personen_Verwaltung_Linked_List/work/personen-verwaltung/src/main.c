@@ -17,6 +17,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
+
 // End: das Programm wird beendet
 void end();
 // Show: eine komplette Liste aller gespeicherten Personen wird in alphabetischer Reihenfolge ausgegeben

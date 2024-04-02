@@ -8,7 +8,7 @@
 
 #include "person.h"
 
-typedef struct linked_list {
+typedef struct {
     struct node *anchor;
 } linked_list_t;
 
