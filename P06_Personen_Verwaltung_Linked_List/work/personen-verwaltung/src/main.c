@@ -13,7 +13,16 @@
  */
 #include <stdio.h>
 #include "person.h"
+#include "list.h"
 #include <stdlib.h>
+#include <stdbool.h>
+
+
+//End: das Programm wird beendet
+void end();
+
+//Show: eine komplette Liste aller gespeicherten Personen wird in alphabetischer Reihenfolge ausgegeben
+void show_p();
 
 /**
  * @brief Main entry point.
@@ -21,28 +30,50 @@
  * @param[in] argv  The command line arguments...
  * @returns Returns EXIT_SUCCESS (=0) on success, EXIT_FAILURE (=1) there is an expression syntax error.
  */
-int main(int argc, char* argv[])
-{
-	// BEGIN-STUDENTS-TO-ADD-CODE
-    
-	// END-STUDENTS-TO-ADD-CODE
+int main(int argc, char *argv[]) {
+    // BEGIN-STUDENTS-TO-ADD-CODE
+    bool running = true;
+
+    while (running) {
+        printf("I(nsert), R(emove), S(how), C(lear), E(nd):\n");
+
+        int c = getchar();
+        //clear out stdin
+        while(getchar() != '\n');
+
+        person_t person;
+        switch (c) {
+            case 'e' | 'E':
+                running = false;
+                break;
+            case 'i' | 'I':
+                person= create_person();
+                insert_p(person);
+
+                break;
+            case 'r' | 'R':
+                break;
+            case 's' | 'S':
+                show_p();
+                break;
+            case 'c' | 'C':
+                clear_p();
+                break;
+            default:
+                printf("what?");
+                break;
+        }
+    }
+
+    // END-STUDENTS-TO-ADD-CODE
     return EXIT_SUCCESS;
 }
 
 
-void remove_p(person_t person){
+void show_p() {
 
 }
 
-void clear_p(person_t person){
-
-}
-
-
-void show_p(person_t person){
-
-}
-
-void insert_p(person_t person){
+void end() {
 
 }
