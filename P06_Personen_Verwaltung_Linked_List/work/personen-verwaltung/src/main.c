@@ -12,6 +12,7 @@
  * @brief Lab implementation
  */
 #include <stdio.h>
+#include "person.h"
 #include <stdlib.h>
 
 /**
@@ -26,4 +27,22 @@ int main(int argc, char* argv[])
     
 	// END-STUDENTS-TO-ADD-CODE
     return EXIT_SUCCESS;
+}
+
+
+void remove_p(person_t person){
+
+}
+
+void clear_p(person_t person){
+
+}
+
+
+void show_p(person_t person){
+
+}
+
+void insert_p(person_t person){
+
 }
