@@ -17,7 +17,6 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-
 // End: das Programm wird beendet
 void end();
 // Show: eine komplette Liste aller gespeicherten Personen wird in alphabetischer Reihenfolge ausgegeben
@@ -38,11 +37,8 @@ int main(int argc, char *argv[])
     while (running)
     {
         printf("I(nsert), R(emove), S(how), C(lear), E(nd):\n");
-
-        int c = getchar();
-        // clear out stdin
-        while (getchar() != '\n');
-
+        char c;
+        scanf("%1s", &c);
         switch (c)
         {
         case 'e' | 'E':
@@ -51,15 +47,19 @@ int main(int argc, char *argv[])
         case 'i' | 'I':
         {
             person_t person;
-            person = create_person();
-            insert_p(person);
+            if (create_person(&person))
+            {
+                insert_p(person);
+            }
         }
         break;
         case 'r' | 'R':
         {
             person_t person;
-            person = find_person();
-            remove_p(person);
+            if (create_person(&person))
+            {
+                remove_p(person);
+            }
         }
         break;
         case 's' | 'S':
@@ -69,24 +69,11 @@ int main(int argc, char *argv[])
             clear_p();
             break;
         default:
-            printf("what?");
+            printf("what?\n");
             break;
         }
     }
 
     // END-STUDENTS-TO-ADD-CODE
     return EXIT_SUCCESS;
-}
-
-void show_p()
-{
-}
-
-person_t find_person()
-{
-    return ;
-}
-
-void end()
-{
 }

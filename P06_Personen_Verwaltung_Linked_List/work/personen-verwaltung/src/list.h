@@ -27,4 +27,9 @@ void clear_p();
 //Insert: der Benutzer wird aufgefordert, eine Person einzugeben
 void insert_p(person_t person);
 
+person_t *find_p(person_t person);
+
+void show_p();
+
+
 #endif //SNP_LIST_H

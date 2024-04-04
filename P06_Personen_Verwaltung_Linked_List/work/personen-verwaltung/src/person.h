@@ -4,7 +4,7 @@
 
 #ifndef SNP_PERSON_H
 #define SNP_PERSON_H
-
+#include <stdbool.h>
 #define NAME_LEN 20
 
 typedef struct {
@@ -24,5 +24,5 @@ typedef struct {
 * @remark a->age – b->age is used for producing the result of age comparison
 */
 int person_compare(const person_t *a, const person_t *b);
-person_t create_person();
+bool create_person(person_t *result);
 #endif //SNP_PERSON_H
