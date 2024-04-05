@@ -7,11 +7,6 @@
 //
 
 #include "person.h"
-
-typedef struct {
-    struct node *anchor;
-} linked_list_t;
-
 typedef struct node {
     person_t content; // in diesem Knoten gespeicherte Person
     struct node *next; // Pointer auf den nächsten Knoten in der Liste
@@ -27,7 +22,7 @@ void clear_p();
 //Insert: der Benutzer wird aufgefordert, eine Person einzugeben
 void insert_p(person_t person);
 
-person_t *find_p(person_t person);
+bool *exists_p(person_t person);
 
 void show_p();
 

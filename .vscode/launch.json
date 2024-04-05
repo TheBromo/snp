@@ -11,10 +11,10 @@
             "program": "${workspaceFolder}/P06_Personen_Verwaltung_Linked_List/work/personen-verwaltung/bin/personen-verwaltung",
             "args": [],
             "stopAtEntry": false,
-            "cwd": "${fileDirname}",
+            "cwd": "${workspaceFolder}/P06_Personen_Verwaltung_Linked_List/work/personen-verwaltung",
             "environment": [],
             "externalConsole": false,
-
+            "preLaunchTask": "${defaultBuildTask}",
             "MIMode": "gdb",
             "miDebuggerPath": "/usr/bin/gdb",
             "setupCommands": [
@@ -30,6 +30,5 @@
                 }
             ]
         }
-
     ]
 }

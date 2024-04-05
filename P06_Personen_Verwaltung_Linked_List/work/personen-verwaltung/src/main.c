@@ -18,10 +18,8 @@
 #include <stdbool.h>
 
 // End: das Programm wird beendet
-void end();
 // Show: eine komplette Liste aller gespeicherten Personen wird in alphabetischer Reihenfolge ausgegeben
 void show_p();
-person_t find_person();
 
 /**
  * @brief Main entry point.
@@ -33,17 +31,18 @@ int main(int argc, char *argv[])
 {
     // BEGIN-STUDENTS-TO-ADD-CODE
     bool running = true;
+    char c;
 
     while (running)
     {
         printf("I(nsert), R(emove), S(how), C(lear), E(nd):\n");
-        char c;
-        scanf("%1s", &c);
+        scanf(" %c", &c);
+
         switch (c)
         {
         case 'e' | 'E':
             running = false;
-            break;
+            continue;
         case 'i' | 'I':
         {
             person_t person;

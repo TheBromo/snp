@@ -1,24 +1,24 @@
 //
-
+#include <stdio.h>
 #include "list.h"
 #include <stdlib.h>
 #include "person.h"
 
-node_t headElement = {
-    {"name",
-     "name",
-     1},
-    NULL};
-node_t *const anchor = &headElement;
-
+node_t start;
+node_t *anchor = &start;
 node_t *nalloc();
 
 // Remove: der Benutzer wird aufgefordert, die Daten einer zu löschenden Person einzugeben
 void remove_p(person_t person)
 {
+    if (!exists_p(person))
+    {
+        return;
+    }
+    
     node_t *current = anchor->next;
-    node_t *previous;
-    while (person_compare(&current->content, &current->next->content) != 0 || current->next != NULL)
+    node_t *previous = anchor;
+    while (current != NULL && person_compare(&current->content, &person) != 0 )
     {
         previous = current;
         current = current->next;
@@ -32,7 +32,7 @@ void remove_p(person_t person)
 void clear_p()
 {
     node_t *current = anchor->next;
-    while (current->next != NULL)
+    while (current != NULL)
     {
         node_t *temp = current;
         current = current->next;
@@ -44,11 +44,15 @@ void clear_p()
 // Insert: der Benutzer wird aufgefordert, eine Person einzugeben
 void insert_p(person_t person)
 {
-    node_t *current = anchor->next;
-    node_t *previous;
-    //aaaa
-    while (current->next == NULL || person_compare(&current->content, &current->next->content) > 0)
+    if (exists_p(person))
+    {
+        return;
+    }
 
+    node_t *current = anchor->next;
+    node_t *previous = anchor;
+
+    while (current != NULL && person_compare(&current->content, &person) > 0)
     {
         previous = current;
         current = current->next;
@@ -56,12 +60,22 @@ void insert_p(person_t person)
     node_t *new = nalloc();
     new->content = person;
     new->next = current;
+    
     previous->next = new;
 }
 
-person_t *find_p(person_t person)
+bool *exists_p(person_t person)
 {
-    return 0;
+    node_t *current = anchor;
+    while (current != NULL)
+    {
+        if (person_compare(&person, &current->content) == 0)
+        {
+            return true;
+        }
+        current = current->next;
+    } 
+    return false;
 }
 
 node_t *nalloc()
@@ -71,4 +85,11 @@ node_t *nalloc()
 
 void show_p()
 {
+    node_t *current = anchor->next;
+    while (current != NULL)
+    {
+        person_t person = current->content;
+        printf("%s %s %d\n", person.name, person.first_name, person.age);
+        current = current->next;
+    }
 }
