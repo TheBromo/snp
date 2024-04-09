@@ -6,7 +6,7 @@
 
 node_t start;
 node_t *anchor = &start;
-node_t *nalloc();
+node_t *palloc();
 
 // Remove: der Benutzer wird aufgefordert, die Daten einer zu löschenden Person einzugeben
 void remove_p(person_t person)
@@ -57,7 +57,7 @@ void insert_p(person_t person)
         previous = current;
         current = current->next;
     }
-    node_t *new = nalloc();
+    node_t *new = palloc();
     new->content = person;
     new->next = current;
     
@@ -78,7 +78,7 @@ bool *exists_p(person_t person)
     return false;
 }
 
-node_t *nalloc()
+node_t *palloc()
 {
     return (node_t *)malloc(sizeof(node_t));
 }
