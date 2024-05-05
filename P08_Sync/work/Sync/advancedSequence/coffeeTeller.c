@@ -1,11 +1,11 @@
 /*******************************************************************************
-* File:     coffeTeller.c
-* Purpose:  simple sequence with semaphores
-* Course:   bsy
-* Author:   M. Thaler, 2011
-* Revision: 5/2012, 7/2013
-* Version:  v.fs20
-*******************************************************************************/
+ * File:     coffeTeller.c
+ * Purpose:  simple sequence with semaphores
+ * Course:   bsy
+ * Author:   M. Thaler, 2011
+ * Revision: 5/2012, 7/2013
+ * Version:  v.fs20
+ *******************************************************************************/
 
 #include <stdio.h>
 #include <unistd.h>
@@ -21,24 +21,34 @@
 
 //******************************************************************************
 
-int main(void) {
+int main(void)
+{
 
-    int      i;
-    sem_t    *coin, *coffee, *ready;
+    int i;
+    sem_t *coin, *coffee, *ready;
 
     // set up a semaphore
-    coin   = sem_open(COIN_SEMAPHOR,   0);
+    coin = sem_open(COIN_SEMAPHOR, 0);
     coffee = sem_open(COFFEE_SEMAPHOR, 0);
-    ready  = sem_open(READY_SEMAPHOR,  0);
+    ready = sem_open(READY_SEMAPHOR, 0);
 
     // start teller machine
     printf("\nCoffee teller machine starting\n\n");
 
     i = 0;
-    while (i < ITERS) {
+    while (i < ITERS)
+    {
         printf("teller (%d): waiting for coin\n", i);
-        printf("       (%d): got coin\n", i);  
-        printf("       (%d): dispense coffee\n", i); 
+
+        sem_post(ready);
+        for (int i = 0; i < NUM_COIN; i++)
+        {
+            sem_wait(coin);
+            printf("       (%d): got coin\n", i);
+        }
+
+        printf("       (%d): dispense coffee\n", i);
+        sem_post(coffee);
         i++;
     }
 }

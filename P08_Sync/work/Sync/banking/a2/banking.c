@@ -10,14 +10,14 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <pthread.h>
-
+#define FATAL(M)            \
+    do                      \
+    {                       \
+        perror(M);          \
+        exit(EXIT_FAILURE); \
+    } while (0)
 #include "banking.h"
 
-
-// return the bigger bank.
-#define MAX( fromB, toB ) ( ( fromB > toB) ? fromB : toB )
-// return the smaller bank
-#define MIN( fromB, toB ) ( ( toB < fromB) ? toB : fromB )
 //******************************************************************************
 
 typedef struct account_struct_
@@ -34,7 +34,7 @@ typedef struct branch_struct
 
 //******************************************************************************
 
-static Branch *bank;
+static Branch *Bank;
 static int nBranches, nAccounts;
 
 //******************************************************************************
@@ -44,28 +44,28 @@ void makeBank(int num_branches, int num_accounts)
 {
     nBranches = num_branches;
     nAccounts = num_accounts;
-    bank = (Branch *)malloc(nBranches * sizeof(Branch));
+    Bank = (Branch *)malloc(nBranches * sizeof(Branch));
 
     pthread_mutexattr_t attr;
     pthread_mutexattr_init(&attr);
-    // pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE_NP);
 
     for (int i = 0; i < nBranches; i++)
     {
-        bank[i].accounts = (Account *)malloc(nAccounts * sizeof(Account));
+        Bank[i].accounts = (Account *)malloc(nAccounts * sizeof(Account));
+        pthread_mutex_init(&(Bank[i].branchLock), &attr);
         for (int j = 0; j < nAccounts; j++)
         {
-            pthread_mutex_init(&bank[i].accounts[j].acntLock, NULL);
-            bank[i].accounts[j].balance = 0;
+            Bank[i].accounts[j].balance = 0;
+            pthread_mutex_init((&(Bank[i].accounts[j].acntLock)), &attr);
         }
     }
 }
 
-void deletebank(void)
+void deleteBank(void)
 {
     for (int i = 0; i < nBranches; i++)
-        free(bank[i].accounts);
-    free(bank);
+        free(Bank[i].accounts);
+    free(Bank);
     nBranches = nAccounts = 0;
 }
 
@@ -73,50 +73,64 @@ long int withdraw(int branchNr, int accountNr, long int value)
 {
     int rv, tmp;
     rv = 0;
-    tmp = bank[branchNr].accounts[accountNr].balance - value;
+
+    // mutex lock for account
+    if (pthread_mutex_lock(&Bank[branchNr].accounts[accountNr].acntLock) != 0)
+    {
+        FATAL("lock");
+    }
+    if(pthread_mutex_lock(&Bank[branchNr].branchLock) != 0) {FATAL("bank lock");}
+
+    tmp = Bank[branchNr].accounts[accountNr].balance - value;
     if (tmp >= 0)
     {
-        bank[branchNr].accounts[accountNr].balance = tmp;
+        Bank[branchNr].accounts[accountNr].balance = tmp;
         rv = value;
-    };
+    }
+
+    if(pthread_mutex_unlock(&Bank[branchNr].branchLock) != 0) {FATAL("bank unlock");}
+    // mutex lock for account
+    if (pthread_mutex_unlock(&Bank[branchNr].accounts[accountNr].acntLock) != 0)
+    {
+        FATAL("unlock");
+    }
+
     return rv;
 }
 
 void deposit(int branchNr, int accountNr, long int value)
 {
-    bank[branchNr].accounts[accountNr].balance += value;
+    // mutex lock for account
+    if (pthread_mutex_lock(&Bank[branchNr].accounts[accountNr].acntLock) != 0)
+    {
+        FATAL("lock");
+    }
+    if(pthread_mutex_lock(&Bank[branchNr].branchLock) != 0) {FATAL("bank lock");}
+    Bank[branchNr].accounts[accountNr].balance += value;
+    if(pthread_mutex_unlock(&Bank[branchNr].branchLock) != 0) {FATAL("bank unlock");}
+    // mutex lock for account
+    if (pthread_mutex_unlock(&Bank[branchNr].accounts[accountNr].acntLock) != 0)
+    {
+        FATAL("unlock");
+    }
 }
 
 void transfer(int fromB, int toB, int accountNr, long int value)
 {
-    if (fromB == toB)
-    {
-        return;
-    }
-
-    int first = MIN(fromB, toB);
-    int second = MAX(fromB, toB);
-
-    // I don't know why this works
-    pthread_mutex_lock(&bank[first].accounts[accountNr].acntLock);
-    pthread_mutex_lock(&bank[second].accounts[accountNr].acntLock);
-
     int money = withdraw(fromB, accountNr, value);
-    deposit(toB, accountNr, money);
-
-    pthread_mutex_unlock(&bank[second].accounts[accountNr].acntLock);
-    pthread_mutex_unlock(&bank[first].accounts[accountNr].acntLock);
+    if (money >= 0)
+        deposit(toB, accountNr, money);
 }
 
 void checkAssets(void)
 {
     static long assets = 0;
-    long int sum = 0;
+    long sum = 0;
     for (int i = 0; i < nBranches; i++)
     {
         for (int j = 0; j < nAccounts; j++)
         {
-            sum += (long int)bank[i].accounts[j].balance;
+            sum += (long)Bank[i].accounts[j].balance;
         }
     }
     if (assets == 0)
@@ -127,44 +141,10 @@ void checkAssets(void)
     else
     {
         if (sum != assets)
-        {
             printf("Balance of accounts is: %ld ... not correct\n", sum);
-        }
         else
             printf("Balance of accounts is: %ld ... correct\n", assets);
     }
 }
 
-int checkIBC(void)
-{
-    static long ibcError = 0;
-    long sum = 0;
-
-    for (int i = 0; i < nBranches; i++)
-    {
-        pthread_mutex_lock(&bank[i].branchLock);
-        for (int j = 0; j < nAccounts; j++)
-        {
-            pthread_mutex_lock(&bank[i].accounts[j].acntLock);
-        }
-    }
-    for (int i = 0; i < nBranches; i++)
-    {
-        for (int j = 0; j < nAccounts; j++)
-        {
-            sum += (long)bank[i].accounts[j].balance;
-        }
-    }
-    for (int i = nBranches - 1; i >= 0; i--)
-    {
-        pthread_mutex_unlock(&bank[i].branchLock);
-        for (int j = 0; j < nAccounts; j++)
-        {
-            pthread_mutex_unlock(&bank[i].accounts[j].acntLock);
-        }
-    }
-    if (ibcError == 0)
-        ibcError = sum;
-    return (ibcError != sum);
-}
 //******************************************************************************
