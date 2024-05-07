@@ -14,6 +14,7 @@ int person_compare(const person_t *a, const person_t *b)
 bool create_person(person_t *result)
 {
     char name[NAME_LEN];
+    char c = 'z';
     char firstname[NAME_LEN];
     unsigned int age;
 
