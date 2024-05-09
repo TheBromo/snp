@@ -40,6 +40,6 @@ int person_to_csv_string(person_t *person, char *s)
 void person_from_csv_string(person_t *person, char *s)
 {
 	// BEGIN-STUDENTS-TO-ADD-CODE
-	sscanf(s,"%s;%s;%u", person->name, person->first_name, person->age);
+	sscanf(s,"%[^;];%[^;];%u", person->name, person->first_name, &person->age);
 	// END-STUDENTS-TO-ADD-CODE
 }
